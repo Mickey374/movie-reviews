@@ -7,10 +7,12 @@ export default class ReviewsController{
         try {
             const movieId = req.body.movie_id
             const review = req.body.review
-            const date = new Date()
             const userInfo = {
-                movie_id: "573a1390f29313caabcd6223"
+                name: req.body.name,
+                _id: req.body.user_id
             }
+            const date = new Date()
+
             const ReviewResponse =  await ReviewsDAO.addReview(
                 movieId,
                 userInfo,
@@ -30,28 +32,25 @@ export default class ReviewsController{
         try {
             const reviewId = req.body.review_id
             const review = req.body.review
+
             const date = new Date()
             
             const ReviewResponse =  await ReviewsDAO.updateReview(
-                reviewsId,
+                reviewId,
                 req.body.user_id,
                 review,
                 date
             )
             var {error} = ReviewResponse
-
             if(error) {
                 res.status.json({error})
             }
             if(ReviewResponse.modifiedCount === 0){
-                reviewId,
-                userId
+                throw new Error("Unable to Update review. User may not be original poster")
             }
             res.json({status: "success"})
         } catch (error) {
-            res.status(500).json({
-                error: error.message
-            })
+            res.status(500).json({error: error.message})
         }
     }
 
