@@ -12,7 +12,7 @@ async function main(){
         //Connect to the MongoDB Cluster
         await client.connect()
         app.listen(port, ()=>{
-            console.log(`Server is running on Port` + port)
+            console.log(`Server is running on Port ` + port)
         })
     } catch (err) {
         console.error(err)
