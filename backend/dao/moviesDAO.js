@@ -1,3 +1,6 @@
+import mongodb from 'mongodb'
+const ObjectId = mongodb.ObjectId
+
 let movies
 
 export default class MoviesDAO{
@@ -36,6 +39,42 @@ export default class MoviesDAO{
         } catch (error) {
             console.error(`Unable to issue find command, ${error}`);
             return {moviesList: [], totalNumMovies: 0}
+        }
+    }
+
+    //Method to implement the getRatings
+    static async getRatings(){
+        let ratings = []
+        try {
+            ratings = await movies.distinct("rated")
+            return ratings
+        } catch (error) {
+            console.error(`Unable to get ratings, ${error}`)
+            return ratings
+        }
+    }
+
+    //Method to get MovieById
+    static async getMovieById(id){
+        try {
+            return await movies.aggregate([
+                {
+                    $match: {
+                        _id: new ObjectId(id)
+                    }
+                },
+                {$lookup:
+                {
+                    from: 'reviews',
+                    localField: '_id',
+                    foreignField: 'movie_id',
+                    as: 'reviews'
+                }
+            }
+            ]).next()
+        } catch (error) {
+            console.error(`Something went wrong in getMovieById: ${error}`);
+            throw error
         }
     }
 }
