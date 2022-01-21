@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import MovieDataService from '../services/movies'
 import {Link} from 'react-router-dom'
-import {Media,Form, Button, Col, Row, Container,Image, Card} from 'react-bootstrap'
+import {Button, Col, Row, Container,Image, Card, Modal} from 'react-bootstrap'
+import movies from "../services/movies";
+import {Media} from 'reactstrap'
 
 const Movie = props =>{
     const[movie, setMovie] = useState({
@@ -31,7 +33,7 @@ const Movie = props =>{
             <Container>
                 <Row>
                     <Col>
-                        <Image src={movie.poster+"/100px180"} fluid />
+                        <Image src={movie.poster+"/100px250"} fluid/>
                     </Col>
                     <Col>
                         <Card>
@@ -45,8 +47,29 @@ const Movie = props =>{
                                 {props.user && <Link to={"/movies/"+props.match.params.id+ "/review"}>Add Review</Link>}
                             </Card.Body>
                         </Card>
-                        <br></br>
                         <h2>Reviews</h2>
+                        <br></br>
+                        {movie.reviews.map((review, index)=>{
+                            return (
+                                <Media key={index}>
+                                    <Media.Body>
+                                        <h5>{review.name + " reviewed on "+ review.date}</h5>
+                                        <p>{review.review}</p>
+                                        {props.user && props.user.id === review.user_id &&
+                                            <Row>
+                                               <Col>
+                                                <Link to={{
+                                                    pathname:"/movies/"+props.match.params.id+"/review",
+                                                    state: {currentReview: review}  
+                                                }}>Edit</Link>
+                                               </Col>
+                                               <Col><Button variant="link">Delete</Button></Col>
+                                            </Row>
+                                        }
+                                    </Media.Body>
+                                </Media>
+                            )
+                        })}
                     </Col>
                 </Row>
             </Container>
