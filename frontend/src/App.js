@@ -1,7 +1,7 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Switch, Route, Link} from "react-router-dom"
-import {Nav,Navbar, Container} from 'react-bootstrap'
+import {Nav,Navbar, Container, NavLink} from 'react-bootstrap'
 import logo from './logo.svg';
 import './App.css';
 
@@ -29,16 +29,13 @@ function App() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">            
-            <Nav.Link>
               <Link to={"/movies"}>Movies</Link>
-            </Nav.Link>            
-            <Nav.Link>
+              
               { user ? (
                 <Link onClick={logout}>Logout User</Link>
               ) : (
                 <Link to={"/login"}>Login</Link>
-              )}              
-            </Nav.Link>
+              )}    
           </Nav>
         </Navbar.Collapse>
       </Navbar>  
